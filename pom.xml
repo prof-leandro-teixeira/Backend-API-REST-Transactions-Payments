@@ -131,6 +131,19 @@
 				<configuration>
 					<encoding>UTF-8</encoding>
 				</configuration>
+				<executions>
+                <execution>
+                    <phase>process-resources</phase>
+                    <goals>
+                        <goal>resources</goal>
+                    </goals>
+                    <configuration>
+                        <filters>
+                            <filter>src/main/resources/version.properties</filter>
+                        </filters>
+                    </configuration>
+                </execution>
+            </executions>
 			</plugin>
 		</plugins>
 	</build>
