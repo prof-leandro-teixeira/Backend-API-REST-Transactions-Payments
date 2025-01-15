@@ -17,6 +17,8 @@ import com.backend.entity.SaleItem;
 import com.backend.requestdto.SaleItemRequestDTO;
 import com.backend.service.SaleItemService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/sale-items")
 public class SaleItemController {
@@ -30,13 +32,13 @@ public class SaleItemController {
     }
 
     @GetMapping("/{saleItemId}")
-    public ResponseEntity<SaleItem> getSaleItemById(@PathVariable Long saleItemId) {
+    public ResponseEntity<SaleItem> getSaleItemById(@Valid @PathVariable Long saleItemId) {
         SaleItem saleItem = saleItemService.getSaleItemById(saleItemId);
         return ResponseEntity.ok(saleItem);
     }
 
     @PostMapping
-    public ResponseEntity<?> createSaleItems(@RequestBody List<SaleItemRequestDTO> saleItems) {
+    public ResponseEntity<?> createSaleItems(@Valid @RequestBody List<SaleItemRequestDTO> saleItems) {
         saleItems.forEach(item -> saleItemService.createSaleItem(item));
         
         String message = saleItems.size() == 1 
@@ -47,14 +49,14 @@ public class SaleItemController {
     }
 
     @PutMapping("/{saleItemId}")
-    public ResponseEntity<SaleItem> updateSaleItem(@PathVariable Long saleItemId,
+    public ResponseEntity<SaleItem> updateSaleItem(@Valid @PathVariable Long saleItemId,
                                                    @RequestBody SaleItemRequestDTO saleItemRequestDTO) {
         SaleItem saleItem = saleItemService.updateSaleItem(saleItemId, saleItemRequestDTO);
         return ResponseEntity.ok(saleItem);
     }
 
     @DeleteMapping("/{saleItemId}")
-    public ResponseEntity<Void> deleteSaleItem(@PathVariable Long saleItemId) {
+    public ResponseEntity<Void> deleteSaleItem(@Valid @PathVariable Long saleItemId) {
         saleItemService.deleteSaleItem(saleItemId);
         return ResponseEntity.noContent().build();
     }

@@ -3,7 +3,7 @@ package com.backend.requestdto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,15 +13,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SaleRequestDTO {
 
-	@NotNull
+	@NotEmpty(message = "O campo Id do usuário é obrigatório.")
 	private Long customerId;
 
-	@NotNull
+	@NotEmpty(message = "Um ou mais itens são esperados.")
 	private List<SaleItemRequestDTO> saleItems;
 
-	@NotNull
+	@NotEmpty(message = "O campo total da venda é obrigatório.")
 	private Double totalAmount;
 
-	@NotNull
+	@NotEmpty(message = "A data é obrigatória.")
 	private LocalDateTime saleDate;
 }

@@ -18,6 +18,7 @@ import com.backend.requestdto.InvoiceRequestDTO;
 import com.backend.service.InvoiceService;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/invoices")
@@ -35,36 +36,28 @@ public class InvoiceController {
 	public ResponseEntity<List<Invoice>> getAllInvoices() {
 		return ResponseEntity.ok(invoiceService.getAllInvoices());
 	}
-	/*
-	public ResponseEntity<List<InvoiceRequestDTO>> getAllInvoices() {
-		List<Invoice> invoices = invoiceService.getAllInvoice();
-		List<InvoiceRequestDTO> invoiceRequestDTOs = invoices.stream()
-				.map(invoice -> new InvoiceRequestDTO(invoice.getSale().getSaleId(), null, null))
-				.collect(Collectors.toList());
-		return ResponseEntity.ok(invoiceRequestDTOs);
-	}*/
-	
-	  @GetMapping("/{invoiceId}")
-	    public ResponseEntity<Invoice> getInvoiceById(@PathVariable Long invoiceId) {
-	        Invoice invoice = invoiceService.getInvoiceById(invoiceId);
-	        return ResponseEntity.ok(invoice);
-	    }
+
+	@GetMapping("/{invoiceId}")
+	public ResponseEntity<Invoice> getInvoiceById(@Valid @PathVariable Long invoiceId) {
+		Invoice invoice = invoiceService.getInvoiceById(invoiceId);
+		return ResponseEntity.ok(invoice);
+	}
 
 	@PostMapping
-	public ResponseEntity<Invoice> createInvoice(@RequestBody InvoiceRequestDTO invoiceRequestDTO) {
+	public ResponseEntity<Invoice> createInvoice(@Valid @RequestBody InvoiceRequestDTO invoiceRequestDTO) {
 		Invoice createdInvoice = invoiceService.createInvoice(invoiceRequestDTO);
 		return ResponseEntity.status(201).body(createdInvoice);
 	}
 
 	@PutMapping("/{invoiceId}")
-	public ResponseEntity<Invoice> updateInvoice(@PathVariable Long invoiceId,
+	public ResponseEntity<Invoice> updateInvoice(@Valid @PathVariable Long invoiceId,
 			@RequestBody InvoiceRequestDTO invoiceRequestDTO) {
 		Invoice updatedInvoice = invoiceService.updateInvoice(invoiceId, invoiceRequestDTO);
 		return ResponseEntity.ok(updatedInvoice);
 	}
 
 	@DeleteMapping("/{invoiceId}")
-	public ResponseEntity<Void> deleteInvoice(@PathVariable Long invoiceId) {
+	public ResponseEntity<Void> deleteInvoice(@Valid @PathVariable Long invoiceId) {
 		invoiceService.deleteInvoice(invoiceId);
 		return ResponseEntity.noContent().build();
 	}

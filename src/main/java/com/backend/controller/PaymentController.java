@@ -18,6 +18,8 @@ import com.backend.entity.Payment;
 import com.backend.requestdto.PaymentRequestDTO;
 import com.backend.service.PaymentService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentController {
@@ -30,7 +32,7 @@ public class PaymentController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Payment> createPayment(@RequestBody PaymentRequestDTO paymentRequestDTO) {
+	public ResponseEntity<Payment> createPayment(@Valid @RequestBody PaymentRequestDTO paymentRequestDTO) {
 		Payment createdPayment = paymentService.createPayment(paymentRequestDTO);
 		return ResponseEntity.status(201).body(createdPayment);
 	}
@@ -45,20 +47,20 @@ public class PaymentController {
 	}
 
 	@GetMapping("/{paymentId}")
-	public ResponseEntity<Payment> getPaymentById(@PathVariable Long paymentId) {
+	public ResponseEntity<Payment> getPaymentById(@Valid @PathVariable Long paymentId) {
 		Payment payment = paymentService.getPaymentById(paymentId);
 		return ResponseEntity.ok(payment);
 	}
 
 	@PutMapping("/{paymentId}")
-	public ResponseEntity<Payment> updatePayment(@PathVariable Long paymentId,
+	public ResponseEntity<Payment> updatePayment(@Valid @PathVariable Long paymentId,
 			@RequestBody PaymentRequestDTO paymentRequestDTO) {
 		Payment updatedPayment = paymentService.updatePayment(paymentId, paymentRequestDTO);
 		return ResponseEntity.ok(updatedPayment);
 	}
 
 	@DeleteMapping("/{paymentId}")
-	public ResponseEntity<Void> deletePayment(@PathVariable Long paymentId) {
+	public ResponseEntity<Void> deletePayment(@Valid @PathVariable Long paymentId) {
 		paymentService.deletePayment(paymentId);
 		return ResponseEntity.noContent().build();
 	}

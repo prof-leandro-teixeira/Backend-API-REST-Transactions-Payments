@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -14,36 +15,51 @@ public class GlobalExceptionHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-	// Manipulador genérico para todas as exceções
+	//para validação de campos em DTOs
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+	    String errorMessage = ex.getBindingResult()
+	                            .getFieldErrors()
+	                            .stream()
+	                            .map(error -> error.getField() + ": " + error.getDefaultMessage())
+	                            .findFirst()
+	                            .orElse("Erro de validação");
+	                            
+	    logger.error("Erro de validação: {}", errorMessage);
+
+	    ErrorResponse errorResponse = new ErrorResponse(
+	        HttpStatus.BAD_REQUEST.value(),
+	        "Erro de validação",
+	        errorMessage,
+	        LocalDateTime.now()
+	    );
+
+	    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+	
+	//HttpMessageNotReadableException (para erros de parsing de JSON).
+	
+	//ConstraintViolationException (para validações diretas do Bean Validation).
+	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-		// Logando o erro
 		logger.error("Erro interno: {}", ex.getMessage(), ex);
 
-		// Criando uma resposta de erro personalizada
 		ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
 				"Erro interno no servidor", ex.getMessage(), LocalDateTime.now());
-
-		// Retorna uma resposta HTTP com status 500 (INTERNAL_SERVER_ERROR) e o corpo da
-		// mensagem
 		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	// Manipulador específico para ResourceNotFoundException
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
-		// Logando o erro de recurso não encontrado
 		logger.error("Recurso não encontrado: {}", ex.getMessage(), ex);
 
-		// Criando a resposta para o erro
 		ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Recurso não encontrado",
 				ex.getMessage(), LocalDateTime.now());
 
-		// Retorna uma resposta HTTP com status 404 (NOT_FOUND) e o corpo da mensagem
 		return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
 	}
 
-	// Classe para encapsular a resposta de erro
 	public static class ErrorResponse {
 		private int status;
 		private String error;
@@ -57,7 +73,6 @@ public class GlobalExceptionHandler {
 			this.timestamp = timestamp;
 		}
 
-		// Getters e setters
 		public int getStatus() {
 			return status;
 		}

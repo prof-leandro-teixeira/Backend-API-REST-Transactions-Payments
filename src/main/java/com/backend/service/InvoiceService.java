@@ -12,6 +12,11 @@ import com.backend.entity.Sale;
 import com.backend.repository.InvoiceRepository;
 import com.backend.repository.SaleRepository;
 import com.backend.requestdto.InvoiceRequestDTO;
+import com.backend.utils.CustomValidationException;
+import com.backend.utils.NotAllowedToUpdateInvoiceException;
+import com.backend.utils.ResourceNotFoundException;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class InvoiceService {
@@ -20,19 +25,11 @@ public class InvoiceService {
 	private final SaleRepository saleRepository;
 
 	public List<Invoice> getAllInvoices() {
-	    List<Invoice> invoices = invoiceRepository.findAll();
-	    
-	    // Inicializando as associações preguiçosas
-	    for (Invoice invoice : invoices) {
-	        Hibernate.initialize(invoice.getSale());
-	    }
-	    
-	    return invoices;
-	}
-	public List<Invoice> getInvoicesBetweenDates(String startDateStr, String endDateStr) {
-		LocalDate startDate = LocalDate.parse(startDateStr);
-		LocalDate endDate = LocalDate.parse(endDateStr);
-		return invoiceRepository.findByIssueDateBetween(startDate, endDate);
+		List<Invoice> invoices = invoiceRepository.findAll();
+		for (Invoice invoice : invoices) {
+			Hibernate.initialize(invoice.getSale());
+		}
+		return invoices;
 	}
 
 	public InvoiceService(InvoiceRepository invoiceRepository, SaleRepository saleRepository) {
@@ -40,48 +37,63 @@ public class InvoiceService {
 		this.saleRepository = saleRepository;
 	}
 
-	// Método para criar a nota fiscal
+	@Transactional
+	public Invoice getInvoiceById(Long invoiceId) {
+		Optional<Invoice> invoice = invoiceRepository.findById(invoiceId);
+		return invoice.orElseThrow(
+				() -> new ResourceNotFoundException("Nota fiscal com Id " + invoiceId + " não encontrada."));
+	}
+
+	@Transactional
+	public List<Invoice> getInvoicesBetweenDates(String startDateStr, String endDateStr) {
+		
+		if (startDateStr == null || endDateStr == null || startDateStr.isEmpty() || endDateStr.isEmpty()) {
+			throw new IllegalArgumentException("As datas de início e fim não podem ser nulas ou vazias.");
+		}
+		LocalDate startDate = LocalDate.parse(startDateStr);
+		LocalDate endDate = LocalDate.parse(endDateStr);
+		List<Invoice> invoices = invoiceRepository.findByIssueDateBetween(startDate, endDate);
+		if (startDate.isAfter(endDate)) {
+		    throw new IllegalArgumentException("A data de início não pode ser maior que a data de fim.");
+		}
+		if (invoices.isEmpty()) {
+			throw new ResourceNotFoundException(
+					"Nenhuma nota fiscal encontrada no período de " + startDateStr + " a " + endDateStr + ".");
+		}
+		return invoices;
+	}
+
+	@Transactional
 	public Invoice createInvoice(InvoiceRequestDTO invoiceRequestDTO) {
 		Optional<Sale> sale = saleRepository.findById(invoiceRequestDTO.getInvoiceId());
 		if (!sale.isPresent()) {
-			throw new RuntimeException("Sale not found");
+			throw new CustomValidationException("Venda não encontrada.");
 		}
-
-		// Criação da fatura (nota fiscal)
 		Invoice invoice = new Invoice();
 		invoice.setSale(sale.get());
 		invoice.setInvoiceNumber(invoiceRequestDTO.getInvoiceNumber());
-		invoice.setIssueDate(LocalDate.now()); // Data de emissão é a data atual
-		invoice.setTotalAmount(invoiceRequestDTO.getAmount()); // Valor total da fatura
-
+		invoice.setIssueDate(LocalDate.now());
+		invoice.setTotalAmount(invoiceRequestDTO.getAmount());
 		return invoiceRepository.save(invoice);
 	}
 
-	// Método para obter a fatura por ID
-	public Invoice getInvoiceById(Long id) {
-		return invoiceRepository.findById(id).orElseThrow(() -> new RuntimeException("Invoice not found"));
-	}
-
-	// Método para atualizar a fatura
+	// Uma vez que a nota fiscal foi gerada e registrada, ela representa o final do
+	// processo de compra,
+	// contendo todas as informações fiscais e tributárias pertinentes à transação.
+	// Alterar a nota fiscal após sua emissão pode causar inconsistências e
+	// problemas legais,
+	// como violação de regulamentações fiscais.
+	@Transactional
 	public Invoice updateInvoice(Long id, InvoiceRequestDTO invoiceRequestDTO) {
-		// Verifique se a fatura existe
+		@SuppressWarnings("unused")
 		Invoice existingInvoice = invoiceRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Invoice not found"));
-
-		// Atualiza os campos
-		existingInvoice.setInvoiceNumber(invoiceRequestDTO.getInvoiceNumber());
-		existingInvoice.setIssueDate(LocalDate.now()); // Atualiza a data de emissão (se necessário)
-		existingInvoice.setTotalAmount(invoiceRequestDTO.getAmount());
-
-		// Salva a fatura atualizada
-		return invoiceRepository.save(existingInvoice);
+				.orElseThrow(() -> new RuntimeException("A nota fiscal não pode ser alterada."));
+		throw new NotAllowedToUpdateInvoiceException("Não é permitido alterar uma nota fiscal após sua emissão.");
 	}
 
-	// Método para excluir a fatura
 	public void deleteInvoice(Long id) {
-		// Verifique se a fatura existe antes de deletar
 		Invoice existingInvoice = invoiceRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Invoice not found"));
+				.orElseThrow(() -> new CustomValidationException("A nota fiscal estornada"));
 
 		invoiceRepository.delete(existingInvoice);
 	}

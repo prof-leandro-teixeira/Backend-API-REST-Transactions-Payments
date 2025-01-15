@@ -139,7 +139,7 @@
                     </goals>
                     <configuration>
                         <filters>
-                            <filter>src/main/resources/version.properties</filter>
+                            <filter>src/main/resources/application.properties</filter>
                         </filters>
                     </configuration>
                 </execution>

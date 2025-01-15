@@ -16,6 +16,8 @@ import com.backend.entity.Product;
 import com.backend.requestdto.ProductRequestDTO;
 import com.backend.service.ProductService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -32,24 +34,24 @@ public class ProductController {
 	}
 
 	@GetMapping("/{productId}")
-	public ResponseEntity<Product> getProductById(@PathVariable Long productId) {
+	public ResponseEntity<Product> getProductById(@Valid @PathVariable Long productId) {
 		return ResponseEntity.ok(productService.getProductById(productId));
 	}
 
 	@PostMapping
-	public ResponseEntity<Product> createProduct(@RequestBody ProductRequestDTO productRequestDTO) {
+	public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequestDTO productRequestDTO) {
 		Product createdProduct = productService.createProduct(productRequestDTO);
 		return ResponseEntity.status(201).body(createdProduct);
 	}
 
 	@PutMapping("/{productId}")
-	public ResponseEntity<Product> updateProduct(@PathVariable Long productId, @RequestBody ProductRequestDTO productRequestDTO) {
+	public ResponseEntity<Product> updateProduct(@Valid @PathVariable Long productId, @RequestBody ProductRequestDTO productRequestDTO) {
 		Product updatedProduct = productService.updateProduct(productId, productRequestDTO);
 		return ResponseEntity.ok(updatedProduct);
 	}
 
 	@DeleteMapping("/{productId}")
-	public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+	public ResponseEntity<Void> deleteProduct(@Valid @PathVariable Long productId) {
 		productService.deleteProduct(productId);
 		return ResponseEntity.noContent().build();
 	}

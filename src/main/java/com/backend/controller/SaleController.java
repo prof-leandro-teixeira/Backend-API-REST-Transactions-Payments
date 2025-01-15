@@ -18,6 +18,7 @@ import com.backend.requestdto.SaleRequestDTO;
 import com.backend.service.SaleService;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/sales")
@@ -37,24 +38,24 @@ public class SaleController {
 	}
 
 	@GetMapping("/{saleId}")
-	public ResponseEntity<Sale> getSaleById(@PathVariable Long saleId) {
+	public ResponseEntity<Sale> getSaleById(@Valid @PathVariable Long saleId) {
 		return ResponseEntity.ok(saleService.getSaleById(saleId));
 	}
 
 	@PostMapping
-	public ResponseEntity<Sale> createSale(@RequestBody SaleRequestDTO saleRequestDTO) {
+	public ResponseEntity<Sale> createSale(@Valid @RequestBody SaleRequestDTO saleRequestDTO) {
 		Sale createdSale = saleService.createSale(saleRequestDTO);
 		return ResponseEntity.status(201).body(createdSale);
 	}
 
 	@PutMapping("/{saleId}")
-	public ResponseEntity<Sale> updateSale(@PathVariable Long saleId, @RequestBody SaleRequestDTO saleRequestDTO) {
+	public ResponseEntity<Sale> updateSale(@Valid @PathVariable Long saleId, @RequestBody SaleRequestDTO saleRequestDTO) {
 		Sale updatedSale = saleService.updateSale(saleId, saleRequestDTO);
 		return ResponseEntity.ok(updatedSale);
 	}
 
 	@DeleteMapping("/{saleId}")
-	public ResponseEntity<Void> deleteSale(@PathVariable Long saleId) {
+	public ResponseEntity<Void> deleteSale(@Valid @PathVariable Long saleId) {
 		saleService.deleteSale(saleId);
 		return ResponseEntity.noContent().build();
 	}

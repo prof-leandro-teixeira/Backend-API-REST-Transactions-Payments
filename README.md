@@ -1,130 +1,145 @@
-# Projeto Backend Java para Integração com Gateways de Pagamento
+# Projeto Backend Java com Integração com Gateways de Pagamento
 
-## Estrutura do Projeto
+Este é um projeto backend desenvolvido em **Java Spring Boot** com **Hibernate** e **arquitetura MVC**. O objetivo principal é realizar vendas com produtos para clientes e integrar essas vendas com sistemas de pagamentos financeiros, garantindo uma integração perfeita com gateways de pagamento como **Stripe** e **PayPal**.
 
-Este projeto utiliza uma **Arquitetura em Camadas** combinada com a **Arquitetura Baseada em Serviços**, uma abordagem padrão em Desenvolvimento de Software. Cada camada tem uma responsabilidade bem definida, seguindo o princípio de separação de responsabilidades e encapsulamento.
+O sistema segue as melhores práticas de design de software, com foco em **SOLID** para uma **arquitetura MVC** modular e de fácil manutenção.
 
-### 1. Entity (Modelo)
 
-- **Responsabilidade:** Representa o modelo de dados ou mapeamento das entidades do banco de dados. Cada classe `@Entity` mapeia uma tabela.
-- **Classificação:** Camada de Persistência. Manipula diretamente os dados no banco.
+### Princípios SOLID
 
-### 2. Repository
+- **SRP (Princípio da Responsabilidade Única)**: Cada classe tem uma única responsabilidade.
+- **LSP (Princípio da Substituição de Liskov)**: Tratamento de erros e validações são feitas com classes específicas.
+- **ISP (Princípio da Segregação de Interface)**: Interfaces específicas para repositórios e serviços.
+- **DIP (Princípio da Inversão de Dependência)**: Uso de injeção de dependência via Spring para desacoplar as classes e facilitar a manutenção e testes.
 
-- **Responsabilidade:** Abstrai a lógica de acesso aos dados usando Spring Data JPA.
-- **Classificação:** Camada de Acesso a Dados. Fornece métodos para operações CRUD.
+### Arquitetura MVC utilizando pacotes:
 
-### 3. Service
+- **Entity**: Mapeia tabelas do banco de dados.
+- **Repository**: Abstrai o acesso aos dados com **Spring Data JPA** e **Hibernate**.
+- **Service**: Implementa a lógica de negócios.
+- **Controller**: Expõe os endpoints da API REST.
+- **DTO**: Realiza a transferência de dados entre camadas, desacoplando as entidades do banco das APIs.
 
-- **Responsabilidade:** Contém a lógica de negócio, orquestrando operações entre os Repositórios e Controladores.
-- **Classificação:** Camada de Serviço. Implementa regras de negócio.
+## Tecnologias Usadas
 
-### 4. Controller
+- **Java** com **Spring Boot**
+- **Hibernate** e **Spring Data JPA** para persistência de dados
+- **Arquitetura MVC**
+- **Git** para controle de versão
 
-- **Responsabilidade:** Exposição dos endpoints da API. Recebe requisições HTTP, valida dados e invoca métodos da camada Service.
-- **Classificação:** Camada de Apresentação. Interage com o usuário ou outras aplicações via chamadas HTTP.
+## Funcionalidades
 
-### 5. DTO (Data Transfer Object)
+- Realização de vendas e integração com sistemas de pagamento
+- Implementação de fluxos complexos de pagamento (autorização, captura, estornos, etc.)
+- Conformidade com padrões de segurança, como PCI-DSS
+- API REST para manipulação de dados de vendas
 
-- **Responsabilidade:** Transferência de dados entre camadas, desacoplando as entidades do banco das representações usadas pelas APIs.
-- **Classificação:** Camada de Transferência de Dados. Promove segurança e performance.
+# SIMULAÇÃO DE METODOLOGIAS ÁGEIS COM SCRUM
+
+##BACKLOG DO PRODUTO
+
+- Realizar vendas com produtos para clientes
+- Integrar vendas com pagamentos garantindo a integração perfeita entre sistemas financeiros, sempre alinhado(a) às melhores práticas de segurança e conformidade do mercado.
+- Gerenciar fluxos complexos de pagamentos, incluindo autorização, captura, estornos e disputas.
+- Garantir conformidade com padrões do setor, como PCI-DSS, e seguir regulamentações locais e internacionais relacionadas a pagamentos.
+
+##BACKLOG DA SPRINT
+
+**CONFIGURAÇÃO DO AMBIENTE**
+
+- Descrição: Preparação do ambiente de desenvolvimento, incluindo IDEs, dependências e configuração de servidor.
+- Status: Concluído.
+- Data de Conclusão: 26/12/2024.
+
+**CRIAÇÃO DO BACKEND INICIAL**
+
+- Descrição: Estrutura inicial do backend com as dependências e configurações básicas com spring initializr.
+- Status: Concluído.
+- Data de Conclusão: 29/12/2024.
+
+**CRIAÇÃO DE MODELOS E REPOSITÓRIOS**
+
+- Descrição: Definição dos modelos de dados e repositórios para integração com o banco de dados utilizando Hibernate e Spring Data JPA.
+- Status: Concluído.
+- Data de Conclusão: 28/12/2024.
+
+**INTEGRAÇÃO COM BANCO DE DADOS**
+
+- Descrição: Configuração e integração do sistema com o banco de dados utilizando Hibernate.
+- Status: Concluído.
+- Data de Conclusão: 28/12/2024.
+
+**CRIAÇÃO DE ENDPOINTS REST**
+
+- Descrição: Criação de endpoints básicos da API REST para manipulação de dados.
+- Status: Concluído.
+- Data de Conclusão: 30/12/2024.
+
+**IMPLEMENTAÇÃO DA API REST**
+
+- Descrição: Implementação completa da API REST, com endpoints que realizam operações CRUD.
+- Status: Concluído.
+- Data de Conclusão: 13/01/2025.
+
+**VERSIONAMENTO COM GIT**
+
+- Descrição: Implementação do controle de versão utilizando Git.
+- Status: Concluído.
+- Data de Conclusão: 13/01/2025.
+
+**VALIDAÇÕES E TRATAMENTO DE ERROS**
+
+- Descrição: Implementar validações nas entradas das requisições e adicionar tratamento adequado de erros para as respostas da API.
+- Prioridade: Alta.
+- Status: Em Andamento.
+- Data Estimada de Conclusão: 20/01/2025.
+
+**AUTENTICAÇÃO E AUTORIZAÇÃO**
+
+- Descrição: Adicionar autenticação e autorização para garantir que apenas usuários autenticados possam acessar os recursos da API.
+- Prioridade: Alta.
+- Status: Não Iniciado.
+- Data Estimada de Conclusão: 30/01/2025.
+
+**TESTES AUTOMATIZADOS**
+
+- Descrição: Implementar testes unitários e de integração para validar as funcionalidades da API.
+- Prioridade: Alta.
+- Status: Não Iniciado.
+- Data Estimada de Conclusão: 15/02/2025.
+
+**INTEGRAÇÃO COM GATEWAYS DE PAGAMENTO (Ex.: Stripe, PayPal)**
+
+- Descrição: Integrar a API com gateways de pagamento.
+- Prioridade: Média.
+- Status: Não Iniciado.
+- Data Estimada de Conclusão: 28/02/2025.
+
+**CONFORMIDADE COM REGULAMENTAÇÕES (PCI-DSS, etc.)**
+
+- Descrição: Garantir que o sistema atenda aos padrões de conformidade exigidos.
+- Prioridade: Média.
+- Status: Não Iniciado.
+- Data Estimada de Conclusão: 31/03/2025.
+
+**IMPLEMENTAÇÃO DE FUNCIONALIDADES AVANÇADAS**
+
+- Descrição: Adicionar recursos como estornos de pagamento e reconciliação financeira.
+- Prioridade: Baixa.
+- Status: Não Iniciado.
+- Data Estimada de Conclusão: 30/04/2025.
+
+**REFATORAÇÃO DE CÓDIGO**
+
+- Descrição: Refatorar o código existente para otimizar o desempenho e a manutenção do sistema.
+- Prioridade: Baixa.
+- Status: Não Iniciado.
+- Data Estimada de Conclusão: 30/04/2025.
 
 ---
 
-## Arquitetura Geral
+📌 Observações Finais
 
-A estrutura geral é composta por:
-
-1. **Camada de Persistência:** Repository + Entity.
-2. **Camada de Serviço:** Service.
-3. **Camada de Apresentação:** Controller.
-4. **Camada de Transferência de Dados:** DTO.
-
----
-
-## Princípios SOLID
-
-### Single Responsibility Principle (SRP) - Princípio da Responsabilidade Única
-
-- **Entity:** Cada classe (como `Sale`, `Product`, `Customer`) representa uma tabela no banco.
-- **Controller:** Gerencia requisições HTTP e respostas.
-- **Service:** Fornece lógica de negócios.
-- **Repository:** Interage exclusivamente com o banco de dados.
-
-### Liskov Substitution Principle (LSP) - Princípio da Substituição de Liskov
-
-- Garantido por meio da organização modular. Embora a herança direta não seja usada nas entidades e DTOs, o desacoplamento promove substituições seguras e evita dependências excessivas.
-
----
-
-**Nota:** Esta estrutura segue boas práticas de desenvolvimento, proporcionando um código escalável, seguro e alinhado aos requisitos da vaga de Desenvolvedor Backend Java Pleno.
-
-# Backlog do Projeto - Desenvolvedor Backend Java Pleno
-
-Este projeto foi criado para atender aos objetivos definidos em uma vaga de Desenvolvedor Backend Java Pleno. A partir das responsabilidades e requisitos descritos, o backlog foi organizado em tarefas realizadas e pendentes.
-
----
-
-## ✅ **Tarefas Realizadas**
-
-### Estruturação Inicial
-
-- [x] Inicialização do projeto em Java com Spring Boot.
-- [x] Criação das classes `Customer`, `Payment`, `Product`, `Sale` e `SalesItem` com `Entity`, `Repository`, `Service` e `Controller`.
-
-### Operações CRUD
-
-- [x] Implementação das operações `GET`, `POST`, `PUT` e `DELETE` para as entidades `Customer` e `Product`.
-- [x] Testes das APIs de `Customer` e `Product` com o Postman.
-
-### Configurações Básicas
-
-- [x] Configuração do banco de dados MySQL e verificação de conexões.
-- [x] Estruturação do arquivo `.gitignore` e inicialização do controle de versão com Git.
-
-### Planejamento
-
-- [x] Sprint Planning e definição de backlog com as principais tarefas.
-
----
-
-## 🔄 **Tarefas Pendentes**
-
-### Integrações de Pagamento
-
-- [ ] Implementar funções para processar pagamentos via APIs de gateways (Stripe, PayPal, etc.).
-- [ ] Validar respostas das APIs para autorizações, capturas e estornos de pagamentos.
-- [ ] Garantir conformidade com padrões como PCI-DSS.
-
-### Funcionalidades Avançadas
-
-- [ ] Resolver problemas com as APIs de `Sale` e `SalesItem` (análise de logs do Spring Boot).
-- [ ] Implementar autenticação e segurança com OAuth e JWT.
-- [ ] Desenvolver fluxos complexos de pagamentos, incluindo reconciliação e disputas.
-
-### Boas Práticas e Escalabilidade
-
-- [ ] Adicionar documentação clara das APIs.
-- [ ] Monitorar desempenho do sistema e implementar melhorias conforme necessário.
-
-### Aprimoramento Técnico
-
-- [ ] Adquirir experiência prática com ferramentas de mensageria como SQS, Kafka ou RabbitMQ.
-- [ ] Configurar pipelines de CI/CD para o projeto.
-- [ ] Certificar conformidade com padrões locais e internacionais de pagamentos.
-
----
-
-## 🗓 **Próximos Passos**
-
-1. Finalizar a análise e correção das APIs `Sale` e `SalesItem`.
-2. Começar a implementação das integrações com gateways de pagamento.
-3. Garantir autenticação e segurança nas operações com APIs.
-4. Iniciar a integração com protocolos de comunicação e autenticação como HTTP, HTTPS, Webhooks, OAuth e JWT.
-5. Implementar o fluxo de autorização, captura, estornos e reconciliação financeira para as transações.
-
----
-
-## 📌 **Observações Finais**
-
-- Este projeto está em constante evolução. Algumas tarefas avançadas como conformidade com PCI-DSS e a implementação de fluxos complexos de pagamento serão abordadas nas próximas versões do software.
+- Este projeto está em constante evolução e prioriza funcionalidades de maior impacto.
+- Tarefas futuras serão ajustadas com base em feedback e necessidades emergentes.
+- Boas práticas, como a conformidade com PCI-DSS e documentação completa, serão abordadas nas próximas fases do desenvolvimento.

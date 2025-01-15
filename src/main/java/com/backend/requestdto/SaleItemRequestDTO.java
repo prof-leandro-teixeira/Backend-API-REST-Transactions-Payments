@@ -1,7 +1,7 @@
 package com.backend.requestdto;
 
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,18 +11,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SaleItemRequestDTO {
 
-	
-	@NotNull
+	@NotEmpty(message = "O Id da venda é obrigatório.")
 	private Long saleId;
 
-	@NotNull
+	@NotEmpty(message = "O Id do produto é obrigatório.")
 	private Long productId;
 
-	@NotNull
+	@NotEmpty(message = "A quantidade do item é obrigatória.")
 	@Min(1)
 	private Integer quantity;
 
-	@NotNull
+	@NotEmpty(message = "O preço do produto é obrigatório.")
 	@Min(0)
 	private Double price;
 

@@ -18,6 +18,7 @@ import com.backend.requestdto.CustomerRequestDTO;
 import com.backend.service.CustomerService;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -37,24 +38,25 @@ public class CustomerController {
 	}
 
 	@GetMapping("/{customerId}")
-	public ResponseEntity<Customer> getCustomerById(@PathVariable Long customerId) {
+	public ResponseEntity<Customer> getCustomerById(@Valid @PathVariable Long customerId) {
 		return ResponseEntity.ok(customerService.getCustomerById(customerId));
 	}
-
+	
 	@PostMapping
-	public ResponseEntity<Customer> createCustomer(@RequestBody CustomerRequestDTO customerRequestDTO) {
-		Customer createdCustomer = customerService.createCustomer(customerRequestDTO);
-		return ResponseEntity.status(201).body(createdCustomer);
+	public ResponseEntity<Customer> createCustomer(@Valid @RequestBody CustomerRequestDTO customerRequestDTO) {
+	    Customer createdCustomer = customerService.createCustomer(customerRequestDTO);
+	    return ResponseEntity.status(201).body(createdCustomer);
 	}
+	
 
 	@PutMapping("/{customerId}")
-	public ResponseEntity<Customer> updateCustomer(@PathVariable Long customerId, @RequestBody CustomerRequestDTO customerRequestDTO) {
+	public ResponseEntity<Customer> updateCustomer(@Valid @PathVariable Long customerId, @RequestBody CustomerRequestDTO customerRequestDTO) {
 	    Customer updatedCustomer = customerService.updateCustomer(customerId, customerRequestDTO);
 	    return ResponseEntity.ok(updatedCustomer);
 	}
 
 	@DeleteMapping("/{customerId}")
-	public ResponseEntity<Void> deleteCustomer(@PathVariable Long customerId) {
+	public ResponseEntity<Void> deleteCustomer(@Valid @PathVariable Long customerId) {
 	    customerService.deleteCustomer(customerId);
 	    return ResponseEntity.noContent().build();
 	}
